@@ -1,3 +1,4 @@
+import hudson.plugins.sonar.SonarScanner
 
 node {
   
@@ -13,7 +14,15 @@ node {
     stage ('Build') {
             sh 'mvn -f MyAwesomeApp/pom.xml clean install'            
         }
-        
+    
+    stage('SonarQube Analysis') {
+       steps {
+         withSonarQubeEnv('devops_project_sonartoken') {
+           sh 'mvn sonar:sonar'
+           }
+          }
+         }
+   
     stage ('archive') {
             archiveArtifacts '**/*.jar'
         }
